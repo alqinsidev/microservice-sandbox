@@ -31,8 +31,8 @@ func (h *UsersHandler) CreateUser(c *gin.Context) {
 	}
 
 	validate := validator.New()
+	validate.RegisterValidation("validRole", domain.ValidateRole)
 	if err := validate.Struct(&createUserDTO); err != nil {
-		logrus.Error(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

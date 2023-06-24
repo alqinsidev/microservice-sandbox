@@ -10,8 +10,8 @@ type User struct {
 }
 
 type CreateUserDTO struct {
-	Nik  string `json:"nik" validate:"required"`
-	Role int    `json:"role" validate:"required"`
+	Nik  string `json:"nik" validate:"required,len=16"`
+	Role int    `json:"role" validate:"required,validRole"`
 }
 
 type CreateUserResponse struct {
