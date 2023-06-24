@@ -1,0 +1,53 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    expose:
+      - "${POSTGRES_PORT}"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - jds
+
+  auth-service:
+    image: alqinsidev/tht2-auth-service:latest
+    ports:
+      - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
+    depends_on:
+      - postgres
+    environment:
+      - JWT_ACCESS_SECRET_KEY=${JWT_ACCESS_SECRET_KEY}
+      - JWT_ACCESS_LIFETIME=${JWT_ACCESS_LIFETIME}
+      - APP_PORT=${AUTH_SERVICE_PORT}
+      - DB_HOST=postgres
+      - DB_PORT=${POSTGRES_PORT}
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_NAME=${POSTGRES_DB}
+    restart: always
+    networks:
+      - jds
+
+  product-service:
+    image: alqinsidev/tht2-product-service:latest
+    ports:
+      - ${PRODUCT_SERVICE_PORT}:${PRODUCT_SERVICE_PORT}
+    depends_on:
+      - postgres
+    environment:
+      - APP_PORT=${PRODUCT_SERVICE_PORT}
+      - JWT_ACCESS_SECRET_KEY=${JWT_ACCESS_SECRET_KEY}
+    restart: always
+    networks:
+      - jds
+
+volumes:
+  postgres-data:
+networks:
+  jds:
