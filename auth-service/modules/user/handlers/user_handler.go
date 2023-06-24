@@ -4,11 +4,11 @@ import (
 	"alqinsidev/auth-service/domain"
 	"alqinsidev/auth-service/middlewares"
 	"alqinsidev/auth-service/modules/user/services"
+	"alqinsidev/auth-service/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/sirupsen/logrus"
 )
 
 type UsersHandler struct {
@@ -25,23 +25,26 @@ func (h *UsersHandler) CreateUser(c *gin.Context) {
 	var createUserDTO domain.CreateUserDTO
 
 	if err := c.ShouldBindJSON(&createUserDTO); err != nil {
-		logrus.Error(err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		errorData := utils.ErrorResponse(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, errorData)
 		return
 	}
 
 	validate := validator.New()
 	validate.RegisterValidation("validRole", domain.ValidateRole)
 	if err := validate.Struct(&createUserDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		errorData := utils.ErrorResponse(http.StatusBadRequest, "plesae provide valid data")
+		c.JSON(http.StatusBadRequest, errorData)
 		return
 	}
 
 	result, err := h.userService.CreateUser(&createUserDTO)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		errorData := utils.ErrorResponse(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, errorData)
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"data": result})
+	response := utils.SuccessResponse(result, http.StatusCreated, "user has been created")
+	c.JSON(http.StatusCreated, response)
 }

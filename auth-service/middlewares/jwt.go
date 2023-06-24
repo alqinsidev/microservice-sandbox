@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"alqinsidev/auth-service/domain"
+	"alqinsidev/auth-service/utils"
 	"net/http"
 	"strings"
 
@@ -12,7 +13,6 @@ import (
 
 func JWTMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Get the token from the Authorization header
 		authHeader := c.GetHeader("Authorization")
 		tokenString := strings.Replace(authHeader, "Bearer ", "", 1)
 
@@ -24,13 +24,15 @@ func JWTMiddleware() gin.HandlerFunc {
 			return accessSecretKey, nil
 		})
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+			errorData := utils.ErrorResponse(http.StatusUnauthorized, "unauthorized")
+			c.JSON(http.StatusUnauthorized, errorData)
 			c.Abort()
 			return
 		}
 
 		if !token.Valid {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			errorData := utils.ErrorResponse(http.StatusUnauthorized, "unauthorized")
+			c.JSON(http.StatusUnauthorized, errorData)
 			c.Abort()
 		}
 
