@@ -24,7 +24,7 @@ func JWTMiddleware() gin.HandlerFunc {
 			return accessSecretKey, nil
 		})
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 			c.Abort()
 			return
 		}
