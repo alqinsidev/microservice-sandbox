@@ -59,14 +59,14 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateUserDTO'
       responses:
-        '200':
+        '201':
           description: Successful registration
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RegistrationResponse'
         '400':
-          description: Nik not comming
+          description: Validation Fail
           content:
             application/json:
               examples:
@@ -87,7 +87,7 @@ paths:
       operationId: validateSession
       responses:
         '200':
-          description: Session is valid
+          description: Valid Access Token
           content:
             application/json:
               schema:
@@ -135,7 +135,7 @@ components:
           example: "1234567890123456"
         password:
           type: string
-          example: "H4ABH1"
+          example: "49K5ZO"
     LoginResponse:
       type: object
       properties:
@@ -173,10 +173,10 @@ components:
               example: 1
             password:
               type: string
-              example: AB4HGT
+              example: 49K5ZO
         status:
           type: number
-          example: 200
+          example: 201
           
     ValidationResponse:
       type: object
