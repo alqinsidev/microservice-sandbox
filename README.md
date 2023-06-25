@@ -21,13 +21,18 @@ Both services are integrated using an Nginx Proxy Pass, which efficiently manage
 
 ## Technologies Used
 
-- **Auth Service**: The service are use golang with gin for routing, and gorm for ORM.
+- **Auth Service**: The service are written in golang with gin for http framework, and gorm for ORM.
 
 - **Product Service**: The service are use NodeJS with NestJS framework.
 
 ## Getting Started
 
-To get started with this project, follow the steps below:
+The project can run either natively on your local machine or deployed as docker container.
+
+
+### Run Natively
+
+To get started with this project running on your local machine, follow the steps below:
 
 1. **Clone the repository**: Begin by cloning this repository to your local machine using the following command:
 
@@ -59,12 +64,33 @@ To get started with this project, follow the steps below:
    npm run start:dev
    ```
 
-## Documentation
 
-For detailed information on how to use and customize this project, refer to the [project documentation](http://18.138.252.135:8012/swagger).
+### Run as Docker Container
+
+The project are ready to use as Docker container stack, to run the project as docker container you can follow the step below:
+
+1. **Pull the docker image**: You can pull all required images using this command:
+
+```
+docker-compose pull
+```
+
+2. **Running the container stack**: After you pull all required images you can execute this command to run the stack:
+
+```
+docker-compose up -d
+```
+Notes: Make sure you have all environment variables setted on `.env` file on the root of project.
+
+## Documentation
+Te project is using OpenApi for API Specs with swagger ui.
+
+For detailed information on how to use and other details, please refer to this [project documentation](http://18.138.252.135:8012/swagger).
 
 
 
 ## Contact
 
-If you have any questions or need assistance, please feel free to contact the project maintainer at [padlanalqinsi@gmail.com].
+If you have any questions about the project, feel free to reach me at [padlanalqinsi@gmail.com].
+
+**SALAM WARGI JABAR**
