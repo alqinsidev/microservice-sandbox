@@ -2,7 +2,7 @@
 
 This is a simple project that combines authentication (auth) and product functionality in the backend. It provides a robust foundation for managing user authentication and product data for your application.
 
-[system design](https://github.com/alqinsidev/microservice-sandbox/blob/dev/docs/images/systemdesign.png)
+![system design](https://github.com/alqinsidev/microservice-sandbox/blob/dev/docs/images/systemdesign.png)
 
 ## Table of Contents
 - [Features](#features)
