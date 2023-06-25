@@ -1,0 +1,37 @@
+name: Build Auth and Product Service and push to docker repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        
+      - name: Check env file
+        run: echo "this is my username $TEST_ENV , this also my username ${{ secrets.TEST_ENV }}, this also ${{env.TEST_ENV}}"
+        
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build auth-service Docker image
+        working-directory: ./auth-service
+        run: docker build -t alqinsidev/tht2-auth-service .
+
+      - name: Build product-service Docker image
+        working-directory: ./product-service
+        run: docker build -t alqinsidev/tht2-product-service .
+
+      - name: Push auth-service Docker image
+        run: docker push alqinsidev/tht2-auth-service
+
+      - name: Push product-service Docker image
+        run: docker push alqinsidev/tht2-product-service
