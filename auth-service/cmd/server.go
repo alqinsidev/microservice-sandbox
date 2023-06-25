@@ -7,6 +7,7 @@ import (
 	_userRepository "alqinsidev/auth-service/modules/user/repositories"
 	_userService "alqinsidev/auth-service/modules/user/services"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -14,23 +15,26 @@ import (
 func SetupRouter(db *gorm.DB) *gin.Engine {
 	r := gin.Default()
 
-	userRoute := r.Group("/users")
-	SetupUserHandlers(userRoute, db)
+	config := cors.DefaultConfig()
+	config.AllowMethods = []string{"GET", "POST"}
+	config.AllowAllOrigins = true
+	r.Use(cors.New(config))
 
-	authRoute := r.Group("/auth")
-	SetupAuthHandlers(authRoute, db)
+	SetupUserHandlers(r, db)
+
+	SetupAuthHandlers(r, db)
 
 	return r
 }
 
-func SetupUserHandlers(userRoute *gin.RouterGroup, db *gorm.DB) {
+func SetupUserHandlers(r *gin.Engine, db *gorm.DB) {
 	userRepository := _userRepository.NewUserRepository(db)
 	userService := _userService.NewUserService(userRepository)
-	_userHandlers.NewUserHandler(userRoute, userService)
+	_userHandlers.NewUserHandler(r, userService)
 }
 
-func SetupAuthHandlers(authRoute *gin.RouterGroup, db *gorm.DB) {
+func SetupAuthHandlers(r *gin.Engine, db *gorm.DB) {
 	userRepository := _userRepository.NewUserRepository(db)
 	authService := _authService.NewAuthService(userRepository)
-	_authHandler.NewAuthHandler(authRoute, authService)
+	_authHandler.NewAuthHandler(r, authService)
 }

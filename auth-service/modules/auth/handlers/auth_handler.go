@@ -15,7 +15,7 @@ type AuthHandler struct {
 	authService *services.AuthService
 }
 
-func NewAuthHandler(r *gin.RouterGroup, authService *services.AuthService) {
+func NewAuthHandler(r *gin.Engine, authService *services.AuthService) {
 	handler := &AuthHandler{authService: authService}
 
 	r.POST("/login", handler.Login)
@@ -55,7 +55,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 func (h *AuthHandler) ValidateToken(c *gin.Context) {
 	claims, _ := c.Get("user")
 	claimsData := claims.(*domain.JWTClaims)
-	result, err := h.authService.ValidateToken(claimsData) // Pass the pointer to claimsData
+	result, err := h.authService.ValidateToken(claimsData)
 	if err != nil {
 		errorData := utils.ErrorResponse(http.StatusBadRequest, err.Error())
 		c.JSON(http.StatusBadRequest, errorData)

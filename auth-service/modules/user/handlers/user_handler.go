@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"alqinsidev/auth-service/domain"
-	"alqinsidev/auth-service/middlewares"
 	"alqinsidev/auth-service/modules/user/services"
 	"alqinsidev/auth-service/utils"
 	"net/http"
@@ -15,10 +14,10 @@ type UsersHandler struct {
 	userService *services.UserService
 }
 
-func NewUserHandler(r *gin.RouterGroup, userService *services.UserService) {
+func NewUserHandler(r *gin.Engine, userService *services.UserService) {
 	handler := &UsersHandler{userService: userService}
 
-	r.POST("/", middlewares.JWTMiddleware(), handler.CreateUser)
+	r.POST("/register", handler.CreateUser)
 }
 
 func (h *UsersHandler) CreateUser(c *gin.Context) {
