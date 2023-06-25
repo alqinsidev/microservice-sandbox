@@ -19,6 +19,8 @@
 /dist
 /out
 
+/product-service/dist
+
 # Ignore node modules for the product-service
 /product-service/node_modules
 
