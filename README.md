@@ -1,8 +1,10 @@
 # Microservice Sandbox
 
-This is a simple project that combines authentication (auth) and product functionality in the backend. It provides a robust foundation for managing user authentication and product data for your application.
+This is a simple project that focuses on microservices architecture, consisting of two main services: the Auth Service and the Product Service.
 
-![system design](https://github.com/alqinsidev/microservice-sandbox/blob/dev/docs/images/systemdesign.png)
+Both services are integrated using an Nginx Proxy Pass, which efficiently manages the routing between them, ensuring seamless communication and interaction.
+
+![system design](https://raw.githubusercontent.com/alqinsidev/microservice-sandbox/dev/docs/images/systemdesign.png)
 
 ## Table of Contents
 - [Features](#features)
@@ -15,13 +17,13 @@ This is a simple project that combines authentication (auth) and product functio
 
 - **Authentication Service**: The service contain 3 end point which is Login, Register, and Validate token.
 
-- **Product Service**: The service contain 2 end point which return list that sorted by price.
+- **Product Service**: The service contains two endpoints. The first endpoint returns a list of all products, while the second endpoint specifically returns only five most expensive products and five most affordable products.
 
 ## Technologies Used
 
 - **Auth Service**: The service are use golang with gin for routing, and gorm for ORM.
 
-- **Auth Service**: The service are use golang with gin for routing, and gorm for ORM.
+- **Product Service**: The service are use NodeJS with NestJS framework.
 
 ## Getting Started
 
