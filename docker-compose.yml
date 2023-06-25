@@ -47,6 +47,33 @@ services:
     networks:
       - jds
 
+  openapi-service:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "${OPENAPI_PORT}:8080"
+    environment:
+      - SWAGGER_JSON=/openapi.yaml
+      - BASE_URL=${OPENAPI_URL}
+    volumes:
+      - ./openapi.yaml:/openapi.yaml:ro
+    restart: always
+    networks:
+      - jds
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - auth-service
+      - product-service
+      - openapi-service
+    restart: always
+    networks:
+      - jds
+
 volumes:
   postgres-data:
 networks:

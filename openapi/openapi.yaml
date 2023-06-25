@@ -1,0 +1,248 @@
+openapi: 3.0.0
+info:
+  title: JDS Take Home Test 2 BE
+  version: 1.0.0
+  description: Documentation Padlan Alqinsi
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: User login
+      operationId: userLogin
+      requestBody:
+        description: User credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDTO'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+              examples:
+                success:
+                  value:
+                    data:
+                      id: uuidv4
+                      nik: 16-char nik
+                      role: 1
+                      access_token: t
+                    status: 200
+                    message: success login
+        '400':
+          description: Nik Not Found
+          content:
+            application/json:
+              examples:
+                nik not found:
+                  value: |-
+                    {
+                        "statusCode": 400,
+                        "message": "record not found"
+                    }
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: User registration
+      operationId: userRegistration
+      requestBody:
+        description: User details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDTO'
+      responses:
+        '200':
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationResponse'
+        '400':
+          description: Nik not comming
+          content:
+            application/json:
+              examples:
+                Bad request:
+                  value:
+                    statusCode: 400
+                    message: please provide valid data
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+          
+  /auth/validate:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - auth
+      summary: Validate user session
+      operationId: validateSession
+      responses:
+        '200':
+          description: Session is valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+                  
+  /product:
+    get:
+      tags:
+        - product
+      summary: Get all products
+      operationId: getAllProducts
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+  /product/suggestion:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - product
+      summary: Get product suggestions
+      operationId: getProductSuggestions
+      responses:
+        '200':
+          description: List of suggested products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+components:
+  schemas:
+    LoginDTO:
+      type: object
+      properties:
+        nik:
+          type: string
+          example: "1234567890123456"
+        password:
+          type: string
+          example: "H4ABH1"
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    CreateUserDTO:
+      type: object
+      properties:
+        nik:
+          type: string
+          minLength: 16
+          example: 1234567890123456
+        role:
+          type: integer
+          enum: [1, 2, 3]
+          example: 1
+          
+      required:
+        - nik
+        - role
+        - password
+    RegistrationResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            nik:
+              type: string
+              example: 1234567890123456
+            role:
+              type: number
+              example: 1
+            password:
+              type: string
+              example: AB4HGT
+        status:
+          type: number
+          example: 200
+          
+    ValidationResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 200
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: uuidv4
+            nik:
+              type: string
+              example: 1234567890123456
+            expired_date_token:
+              type: string
+              format: date-time
+        message:
+          type: string
+          example: token are valid
+    ProductListResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        message:
+          type: string
+          example: product data
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        price:
+          type: string
+        price_idr:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        department:
+          type: string
+        product:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: unauthorized
+      content:
+        application/json:
+          examples:
+            unauthorized:
+              value: '{"statusCode":401,"message":"unauthorized"}'
+          
+servers:
+  - url: http://18.138.252.135:8000
+    variables: {}
+    description: aws server
