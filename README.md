@@ -87,10 +87,18 @@ Te project is using OpenApi for API Specs with swagger ui.
 
 For detailed information on how to use and other details, please refer to this [project documentation](http://18.138.252.135:8012/swagger).
 
+## Future Works 
+
+The project has a lot of work to do, this is a list of what need to be improved on the project:
+
+1. **Testing**: The project are not fully covered by unit test, especially on auth service. 
+
+2. **CI/CD**: The project are using Github Actions to build the docker container and push to the registry when there is any commit on main branch. Yet it's not fully automated, it still need to pull the container on the server in order to update the production deployment to the latest version.
 
 
 ## Contact
 
 If you have any questions about the project, feel free to reach me at [padlanalqinsi@gmail.com].
+
 
 **SALAM WARGI JABAR**
