@@ -56,6 +56,9 @@ services:
       - BASE_URL=${OPENAPI_URL}
     volumes:
       - ./openapi.yaml:/openapi.yaml:ro
+    depends_on:
+      - auth-service
+      - product-service
     restart: always
     networks:
       - jds
