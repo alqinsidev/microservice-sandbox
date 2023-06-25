@@ -12,6 +12,15 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+        
+      - name: Check env file
+        run: echo "this is my username $TEST_ENV."
+        
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_TOKEN
 
       - name: Build auth-service Docker image
         working-directory: ./auth-service
@@ -20,12 +29,6 @@ jobs:
       - name: Build product-service Docker image
         working-directory: ./product-service
         run: docker build -t alqinsidev/tht2-product-service .
-      
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_TOKEN
 
       - name: Push auth-service Docker image
         run: docker push alqinsidev/tht2-auth-service
