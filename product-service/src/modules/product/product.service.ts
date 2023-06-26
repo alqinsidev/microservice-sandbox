@@ -1,20 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { Product, ProductIdr, SortedProduct } from 'src/domain/product.domain';
+import {
+  CurrencyResponse,
+  Product,
+  ProductIdr,
+  SortedProduct,
+} from 'src/domain/product.domain';
 
 @Injectable()
 export class ProductService {
-  private readonly apiUrl: string;
+  private readonly productUrl: string;
+  private readonly currencyUrl: string;
   constructor() {
-    this.apiUrl =
+    this.productUrl =
       'https://60c18de74f7e880017dbfd51.mockapi.io/api/v1/jabar-digital-services/product';
+    this.currencyUrl =
+      'https://api.currencyapi.com/v3/latest?apikey=aoypan2ESZYfDUJa42KknRTRgM8TjkwJyS1EFqrE&currencies=IDR';
   }
 
   async getProducts() {
     try {
-      const response = await axios.get(this.apiUrl);
+      const response = await axios.get(this.productUrl);
       const { data } = response;
-      const conversionRate = await getConversionRate();
+      const conversionRate = await getConversionRate(this.currencyUrl);
       const formattedData: ProductIdr[] = data.map((product: Product) => ({
         ...product,
         price_idr: convertUsdToIdr(product.price, conversionRate),
@@ -45,11 +53,13 @@ const sortProductsByPrice = (products: ProductIdr[]): SortedProduct => {
   return { mostExpensive, mostCheap };
 };
 
-const getConversionRate = async () => {
+const getConversionRate = async (url: string) => {
   try {
-    //fetch api
-    //return usd_idr value
-    throw 'error';
+    const response = await axios.get(url);
+    const { data }: { data: CurrencyResponse } = response;
+    const conversionRate = Number(data.data.IDR.value);
+
+    return conversionRate;
   } catch (error) {
     return 15000;
   }

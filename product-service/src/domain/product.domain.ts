@@ -14,3 +14,17 @@ export interface SortedProduct {
   mostExpensive: ProductIdr[];
   mostCheap: ProductIdr[];
 }
+
+export interface CurrencyResponse {
+  meta: {
+    last_updated_at: string;
+  };
+  data: {
+    [currencyCode: string]: Currency;
+  };
+}
+
+interface Currency {
+  code: string;
+  value: number;
+}
